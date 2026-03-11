@@ -1,0 +1,31 @@
+# 📝 Python To-Do List Application
+
+A simple and enhanced command-line To-Do List application built using Python.  
+This project allows users to manage their daily tasks efficiently through a terminal interface.
+
+## 🚀 Features
+
+- Add new tasks
+- View all tasks
+- Delete tasks
+- Mark tasks as completed
+- Persistent storage using JSON
+- Error handling for invalid inputs
+
+## 🛠️ Technologies Used
+
+- Python
+- JSON
+- Command Line Interface (CLI)
+
+## 📂 Project Structure
+
+todo-list/
+│
+├── todo.py
+├── tasks.json
+└── README.md
+
+## ▶️ How to Run the Project
+
+1. Clone the repository
