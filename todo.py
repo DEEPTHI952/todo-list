@@ -1,38 +1,92 @@
-tasks = []
+import json
+import os
 
-def show_tasks():
-    if len(tasks) == 0:
-        print("No tasks in the list.")
-    else:
-        print("\nYour To-Do List:")
-        for i, task in enumerate(tasks):
-            print(f"{i+1}. {task}")
+FILE_NAME = "tasks.json"
 
-while True:
-    print("\n1. Add Task")
-    print("2. Remove Task")
-    print("3. Show Tasks")
-    print("4. Exit")
+class TodoList:
 
-    choice = input("Enter your choice: ")
+    def __init__(self):
+        self.tasks = []
+        self.load_tasks()
 
-    if choice == "1":
+    def load_tasks(self):
+        if os.path.exists(FILE_NAME):
+            with open(FILE_NAME, "r") as file:
+                self.tasks = json.load(file)
+
+    def save_tasks(self):
+        with open(FILE_NAME, "w") as file:
+            json.dump(self.tasks, file, indent=4)
+
+    def show_tasks(self):
+        if not self.tasks:
+            print("\nNo tasks available.\n")
+            return
+
+        print("\nYour Tasks:\n")
+        for i, task in enumerate(self.tasks, start=1):
+            status = "✔ Completed" if task["done"] else "❌ Pending"
+            print(f"{i}. {task['task']} [{status}]")
+        print()
+
+    def add_task(self):
         task = input("Enter task: ")
-        tasks.append(task)
-        print("Task added!")
+        self.tasks.append({"task": task, "done": False})
+        self.save_tasks()
+        print("Task added successfully!")
 
-    elif choice == "2":
-        show_tasks()
-        task_num = int(input("Enter task number to remove: "))
-        tasks.pop(task_num - 1)
-        print("Task removed!")
+    def delete_task(self):
+        self.show_tasks()
+        try:
+            num = int(input("Enter task number to delete: "))
+            removed = self.tasks.pop(num - 1)
+            self.save_tasks()
+            print(f"Deleted task: {removed['task']}")
+        except:
+            print("Invalid task number")
 
-    elif choice == "3":
-        show_tasks()
+    def mark_complete(self):
+        self.show_tasks()
+        try:
+            num = int(input("Enter task number to mark complete: "))
+            self.tasks[num - 1]["done"] = True
+            self.save_tasks()
+            print("Task marked as completed!")
+        except:
+            print("Invalid task number")
 
-    elif choice == "4":
-        print("Goodbye!")
-        break
 
-    else:
-        print("Invalid choice")
+def menu():
+    todo = TodoList()
+
+    while True:
+        print("\n====== TO-DO LIST ======")
+        print("1. View Tasks")
+        print("2. Add Task")
+        print("3. Delete Task")
+        print("4. Mark Task Complete")
+        print("5. Exit")
+
+        choice = input("Choose an option: ")
+
+        if choice == "1":
+            todo.show_tasks()
+
+        elif choice == "2":
+            todo.add_task()
+
+        elif choice == "3":
+            todo.delete_task()
+
+        elif choice == "4":
+            todo.mark_complete()
+
+        elif choice == "5":
+            print("Goodbye!")
+            break
+
+        else:
+            print("Invalid option")
+
+
+menu()
